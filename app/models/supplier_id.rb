@@ -1,0 +1,2 @@
+class SupplierId < ApplicationRecord
+end
