@@ -16,4 +16,10 @@ class Product < ApplicationRecord
   def total
     price + tax
   end
+
+  # def supplier
+  #   Supplier.find_b (:id supplier_id)
+  # end
+  belongs_to :supplier
+  has_many :image
 end
