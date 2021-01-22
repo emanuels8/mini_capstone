@@ -32,6 +32,7 @@ class Api::ProductsController < ApplicationController
         name: params["name"],
         price: params["price"],
         image: params["image"],
+        # supplier_id: params["supplier_id"],
         # image_url: params["image_url"],
         description: params["description"],
 
@@ -39,6 +40,7 @@ class Api::ProductsController < ApplicationController
     )
 
     if @product.save == true
+      # Image.create(product_id: @product.id, url: params[:image_url])
       render "show.json.jb"
     else
       render json: { error: "The Product did not save" }, status: 422
