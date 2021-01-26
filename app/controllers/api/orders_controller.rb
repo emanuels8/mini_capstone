@@ -1,25 +1,28 @@
 class Api::OrdersController < ApplicationController
   def index
-    @hi = "hi"
+    @orders = current_user.orders
+    render "index.json.jb"
   end
 
   def create
+    product = Product.find_by(id: params[:product_id])
+    calculated_subtotal = product.price * params[:quantity].to_i
+    calculated_tax = calculated_subtotal * 0.09
+    calculated_total = calculated_subtotal + calculated_tax
     @order = Order.new(
-      {
-        user_id: params["user_id"],
-        product_id: params["product_id"],
-        quantity: params["quantity"],
-        subtotal: params["subtotal"],
-        tax: params["tax"],
-        total: params["total"],
-
-      }
+      user_id: current_user.id,
+      product_id: params[:product_id],
+      quantity: params[:quantity],
+      subtotal: calculated_subtotal,
+      tax: calculated_tax,
+      total: calculated_total,
     )
     @order.save
-    @order.subtotal = Product.find_by(id: @order.product_id).price
-    @order.subtotal *= @order.quantity.to_i
-    @order.tax = @order.subtotal * 0.09
-    @order.total = @order.subtotal + @order.tax
+    render "show.json.jb"
+  end
+
+  def show
+    @order = current_user.orders.find_by(id: params[:id])
     render "show.json.jb"
   end
 end
